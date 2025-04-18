@@ -1,0 +1,17 @@
+---
+- name: Prepare Lighthouse prerequisites
+  ansible.builtin.import_tasks: prepare.yml
+  tags:
+    - lighthouse-prepare
+    - lighthouse-config
+    - lighthouse-install
+
+- name: Configure Lighthouse settings
+  ansible.builtin.import_tasks: configure.yml
+  tags:
+    - lighthouse-config
+
+- name: Install Lighthouse binary and dependencies
+  ansible.builtin.import_tasks: install.yml
+  tags:
+    - lighthouse-install

@@ -1,0 +1,22 @@
+galaxy_info:
+  author: nokey
+  description: Ansible role for deploying Lighthouse consensus or validator client
+  namespace: keynodes
+  role_name: ansible_lighthouse
+  company: keynodes
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - "jammy"
+
+  galaxy_tags:
+    - lighthouse
+    - consensus
+    - beacon
+    - validator
+    - ethereum
+    - staking
+
+dependencies: []

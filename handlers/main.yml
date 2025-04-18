@@ -1,0 +1,14 @@
+---
+- name: Lighthouse - restart beacon
+  systemd:
+    state: restarted
+    daemon_reload: true
+    enabled: true
+    name: "{{ lighthouse_beacon_service_name }}"
+
+- name: Lighthouse - restart validator
+  systemd:
+    state: restarted
+    daemon_reload: true
+    enabled: true
+    name: "{{ lighthouse_validator_service_name }}"

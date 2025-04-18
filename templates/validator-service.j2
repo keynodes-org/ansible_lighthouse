@@ -1,0 +1,65 @@
+[Unit]
+Description=Lighthouse Ethereum Validator Client
+After=network.target
+Wants=network.target
+
+[Service]
+User={{ lighthouse_user }}
+Group={{ lighthouse_group }}
+Type=simple
+ExecStart={{ lighthouse_binary_path }} validator_client \
+  --network {{ lighthouse_network }} \
+  --datadir {{ lighthouse_validator_datadir }} \
+  --validators-dir {{ lighthouse_validators_dir }} \
+  --secrets-dir {{ lighthouse_secrets_dir }} \
+  --beacon-nodes {{ lighthouse_beacon_nodes | join(',') }} \
+{% if lighthouse_validator_client_config | selectattr('name', 'equalto', 'metrics') | map(attribute='value') | first %}
+  --metrics \
+  --metrics-address {{ lighthouse_validator_client_config | selectattr('name', 'equalto', 'metrics-address') | map(attribute='value') | first }} \
+  --metrics-port {{ lighthouse_validator_client_config | selectattr('name', 'equalto', 'metrics-port') | map(attribute='value') | first }} \
+{% endif %}
+  --debug-level {{ lighthouse_validator_client_config | selectattr('name', 'equalto', 'debug-level') | map(attribute='value') | first }} \
+{% if lighthouse_validator_custom_options | length > 0 %}
+{% for option in lighthouse_validator_custom_options %}
+  {{ option }} {% if not loop.last %}\{% endif %}
+{% endfor %}
+{% endif %}
+
+Restart=always
+RestartSec=5
+StartLimitInterval=0
+KillSignal=SIGINT
+TimeoutStopSec=300
+
+# Hardening measures
+ProtectSystem=full
+PrivateTmp=true
+PrivateDevices=true
+NoNewPrivileges=true
+MemoryDenyWriteExecute=true
+
+# Sandb
+{% endif %}
+  --debug-level {{ lighthouse_debug_level }}
+
+Restart=always
+RestartSec=5
+StartLimitInterval=0
+KillSignal=SIGINT
+TimeoutStopSec=300
+
+# Hardening measures
+ProtectSystem=full
+PrivateTmp=true
+PrivateDevices=true
+NoNewPrivileges=true
+MemoryDenyWriteExecute=true
+
+# Sandboxing
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+[Install]
+WantedBy=multi-user.target

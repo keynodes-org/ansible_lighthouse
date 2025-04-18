@@ -1,0 +1,9 @@
+skip_list:
+  - no-changed-when
+  - fqcn[action-core]
+
+parseable: false
+quiet: false
+use_default_rules: true
+offline: true
+verbosity: 0

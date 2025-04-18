@@ -1,0 +1,17 @@
+---
+- name: Lighthouse - check if JWT secret exists
+  ansible.builtin.stat:
+    path: "{{ lighthouse_jwt_secret_path }}"
+  register: jwt_secret_file
+
+- name: Lighthouse - generate JWT secret if not exists
+  ansible.builtin.command: "openssl rand -hex -out {{ lighthouse_jwt_secret_path }} 32"
+  when: not jwt_secret_file.stat.exists
+  become: true
+
+- name: Lighthouse - update JWT permissions
+  ansible.builtin.file:
+    path: "{{ lighthouse_jwt_secret_path }}"
+    owner: "{{ lighthouse_user }}"
+    group: "{{ lighthouse_group }}"
+    mode: "640"
