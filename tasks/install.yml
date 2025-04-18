@@ -24,7 +24,7 @@
     mode: "0644"
   when: lighthouse_mode == "beacon"
   notify:
-    - lighthouse - restart beacon
+    - Lighthouse - restart beacon
 
 - name: Lighthouse - write validator systemd unit
   ansible.builtin.template:
@@ -35,7 +35,7 @@
     mode: "0644"
   when: lighthouse_mode == "validator"
   notify:
-    - lighthouse - restart validator
+    - Lighthouse - restart validator
 
 - name: Lighthouse - ensure beacon service is started (if in beacon mode)
   ansible.builtin.systemd:
@@ -45,7 +45,7 @@
     enabled: true
   when: lighthouse_mode == "beacon"
   notify:
-    - lighthouse - restart beacon
+    - Lighthouse - restart beacon
 
 - name: Lighthouse - ensure validator service is started (if in validator mode)
   ansible.builtin.systemd:
@@ -55,4 +55,4 @@
     enabled: true
   when: lighthouse_mode == "validator"
   notify:
-    - lighthouse - restart validator
+    - Lighthouse - restart validator
