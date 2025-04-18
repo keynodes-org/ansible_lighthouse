@@ -58,7 +58,7 @@ def test_lighthouse_user(host):
 def test_lighthouse_binary(host):
     cmd = host.run("/usr/local/bin/lighthouse --version")
     assert cmd.rc == 0
-    assert "Lighthouse" in cmd.stdout("Lighthouse")
+    assert "Lighthouse" in cmd.stdout
 
 
 @pytest.mark.parametrize("service", ["lighthouse-beacon"])
