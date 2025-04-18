@@ -1,0 +1,166 @@
+---
+# General settings
+# @var lighthouse_user:description: Username for the Lighthouse node.
+lighthouse_user: "lighthouse"
+
+# @var lighthouse_group:description: Group for running the Lighthouse node.
+lighthouse_group: "lighthouse"
+
+# @var lighthouse_general_owner:description: General owner for Lighthouse system files.
+lighthouse_general_owner: root
+
+# @var lighthouse_mode:description: Mode to run Lighthouse in (beacon or validator).
+lighthouse_mode: "beacon"
+
+# Directory settings
+# @var lighthouse_dir_base:description: Base directory for Lighthouse installation.
+lighthouse_dir_base: "/opt/lighthouse"
+
+# @var lighthouse_dir_data:description: Directory for Lighthouse data storage.
+lighthouse_dir_data: "{{ lighthouse_dir_base }}/data"
+
+# @var lighthouse_dir_config:description: Directory for Lighthouse configuration files.
+lighthouse_dir_config: "{{ lighthouse_dir_base }}/config"
+
+# @var lighthouse_dir_log:description: Directory for Lighthouse log files.
+lighthouse_dir_log: "{{ lighthouse_dir_base }}/logs"
+
+# @var lighthouse_dir_validators:description: Directory for validator keys (only used in validator mode).
+lighthouse_dir_validators: "{{ lighthouse_dir_base }}/validators"
+
+# @var lighthouse_dir_secrets:description: Directory for validator secrets (only used in validator mode).
+lighthouse_dir_secrets: "{{ lighthouse_dir_base }}/secrets"
+
+# Binary settings
+# @var lighthouse_dir_binary:description: Directory to install the Lighthouse binary.
+lighthouse_dir_binary: "/usr/local/bin"
+
+# @var lighthouse_binary_path:description: Path to the Lighthouse binary.
+lighthouse_binary_path: "{{ lighthouse_dir_binary }}/lighthouse"
+
+# @var lighthouse_download_url:description: URL to download the Lighthouse binary.
+lighthouse_binary_download_url: "https://github.com/sigp/lighthouse/releases/download/v6.0.1/lighthouse-v6.0.1-x86_64-unknown-linux-gnu.tar.gz"
+
+# JWT settings
+# @var lighthouse_jwt_secret_path:description: Path to the JWT secret for authentication with execution client.
+lighthouse_jwt_secret_path: "{{ lighthouse_dir_config }}/jwt.hex"
+
+# Service settings
+# @var lighthouse_dir_systemd:description: Systemd service directory for Lighthouse.
+lighthouse_dir_systemd: "/lib/systemd/system"
+
+# @var lighthouse_beacon_service_name:description: Systemd service name for Lighthouse beacon node.
+lighthouse_beacon_service_name: "lighthouse-beacon"
+
+# @var lighthouse_validator_service_name:description: Systemd service name for Lighthouse validator client.
+lighthouse_validator_service_name: "lighthouse-validator"
+
+# @var lighthouse_reinstall:description: Force reinstall Lighthouse binary.
+lighthouse_reinstall: false
+
+# Common parameters
+# @var lighthouse_network:description: The network to connect to (mainnet, gnosis, chiado, sepolia, holesky).
+lighthouse_network: "mainnet"
+
+# @var lighthouse_beacon_datadir:description: Data directory for the beacon node.
+lighthouse_beacon_datadir: "{{ lighthouse_dir_data }}/.lighthouse"
+
+# @var lighthouse_validator_datadir:description: Data directory for the validator client.
+lighthouse_validator_datadir: "{{ lighthouse_dir_data }}/.lighthouse"
+
+# Beacon node configuration
+# @var lighthouse_beacon_node_config:description: List of configuration options for the Lighthouse beacon node.
+lighthouse_beacon_node_config:
+  - name: "network"
+    description: "The network name"
+    value: "{{ lighthouse_network }}"
+  - name: "datadir"
+    description: "Data directory for the beacon node"
+    value: "{{ lighthouse_beacon_datadir }}"
+  - name: "execution-endpoint"
+    description: "Execution client endpoint"
+    value: "http://localhost:8551"
+  - name: "execution-jwt"
+    description: "Path to JWT secret file for authentication with execution client"
+    value: "{{ lighthouse_jwt_secret_path }}"
+  - name: "http"
+    description: "Enable the HTTP API server"
+    value: true
+  - name: "http-address"
+    description: "Address to bind the HTTP server to"
+    value: "127.0.0.1"
+  - name: "http-port"
+    description: "Port to bind the HTTP server to"
+    value: 5052
+  - name: "metrics"
+    description: "Enable the Prometheus metrics HTTP server"
+    value: true
+  - name: "metrics-address"
+    description: "Address to bind the metrics server to"
+    value: "127.0.0.1"
+  - name: "metrics-port"
+    description: "Port to bind the metrics server to"
+    value: 5054
+  - name: "listen-address"
+    description: "Address to bind to for P2P traffic"
+    value: "0.0.0.0"
+  - name: "port"
+    description: "Port to bind to for P2P traffic (TCP/UDP)"
+    value: 9000
+  - name: "target-peers"
+    description: "Target number of peers to connect to"
+    value: 50
+  - name: "logfile"
+    description: "Log file path"
+    value: "{{ lighthouse_dir_log }}/beacon.log"
+  - name: "debug-level"
+    description: "Logging level"
+    value: "info"
+  - name: "checkpoint-sync-url"
+    description: "Checkpoint for fast sync"
+    value: "https://sync-mainnet.beaconcha.in"
+
+# @var lighthouse_beacon_node_custom_config:description: Custom configuration options for the Lighthouse beacon node.
+lighthouse_beacon_node_custom_options: []
+# Example custom options:
+# - "--checkpoint-sync-url=https://sync-mainnet.beaconcha.in"
+# - "--execution-timeout-multiplier=2"
+# - "--prune-blobs"
+
+# Validator client configuration
+# @var lighthouse_validator_client_config:description: List of configuration options for the Lighthouse validator client.
+lighthouse_validator_client_config:
+  - name: "network"
+    description: "The network name"
+    value: "{{ lighthouse_network }}"
+  - name: "datadir"
+    description: "Data directory for the validator client"
+    value: "{{ lighthouse_validator_datadir }}"
+  - name: "beacon-nodes"
+    description: "List of beacon nodes to connect to (comma-separated)"
+    value: "http://localhost:5052"
+  - name: "validators-dir"
+    description: "Directory containing validator keystores and definitions"
+    value: "{{ lighthouse_dir_validators }}"
+  - name: "secrets-dir"
+    description: "Directory containing validator keystore passwords"
+    value: "{{ lighthouse_dir_secrets }}"
+  - name: "metrics"
+    description: "Enable the Prometheus metrics HTTP server"
+    value: true
+  - name: "metrics-address"
+    description: "Address to bind the metrics server to"
+    value: "127.0.0.1"
+  - name: "metrics-port"
+    description: "Port to bind the metrics server to"
+    value: 5064
+  - name: "debug-level"
+    description: "Logging level"
+    value: "info"
+
+# @var lighthouse_validator_client_custom_config:description: Custom configuration options for the Lighthouse validator client.
+lighthouse_validator_custom_options: []
+# Example custom options:
+# - "--suggested-fee-recipient=0x0000000000000000000000000000000000000000"
+# - "--graffiti=MyValidator"
+# - "--enable-doppelganger-protection"

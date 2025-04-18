@@ -1,0 +1,36 @@
+---
+- name: Lighthouse - create group
+  ansible.builtin.group:
+    name: "{{ lighthouse_group }}"
+    state: present
+
+- name: Lighthouse - user configuration
+  ansible.builtin.user:
+    name: "{{ lighthouse_user }}"
+    group: "{{ lighthouse_group }}"
+    append: true
+    shell: /usr/sbin/nologin
+    create_home: false
+
+- name: Lighthouse - create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ lighthouse_user }}"
+    group: "{{ lighthouse_group }}"
+  with_items:
+    - "{{ lighthouse_dir_base }}"
+    - "{{ lighthouse_dir_data }}"
+    - "{{ lighthouse_dir_config }}"
+    - "{{ lighthouse_dir_log }}"
+    - "{{ lighthouse_dir_validators }}"
+    - "{{ lighthouse_dir_secrets }}"
+
+- name: Lighthouse - install required apt packages
+  ansible.builtin.apt:
+    name:
+      - curl
+      - openssl
+      - gcc
+    update_cache: true

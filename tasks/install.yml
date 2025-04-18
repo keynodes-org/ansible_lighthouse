@@ -1,0 +1,58 @@
+---
+- name: Lighthouse - check lighthouse is installed
+  ansible.builtin.stat:
+    path: "{{ lighthouse_binary_path }}"
+  register: lighthouse_binary
+
+
+- name: Lighthouse - download and extract binary
+  unarchive:
+    src: "{{ lighthouse_binary_download_url }}"
+    dest: "{{ lighthouse_dir_binary }}"
+    owner: "{{ lighthouse_user }}"
+    group: "{{ lighthouse_group }}"
+    remote_src: true
+    mode: "0755"
+  when: (not lighthouse_binary.stat.exists) or (lighthouse_reinstall)
+
+- name: Lighthouse - write beacon systemd unit
+  ansible.builtin.template:
+    src: beacon-service.j2
+    dest: "{{ lighthouse_dir_systemd }}/{{ lighthouse_beacon_service_name }}.service"
+    owner: "{{ lighthouse_user }}"
+    group: "{{ lighthouse_group }}"
+    mode: "0644"
+  when: lighthouse_mode == "beacon"
+  notify:
+    - lighthouse - restart beacon
+
+- name: Lighthouse - write validator systemd unit
+  ansible.builtin.template:
+    src: validator-service.j2
+    dest: "{{ lighthouse_dir_systemd }}/{{ lighthouse_validator_service_name }}.service"
+    owner: "{{ lighthouse_user }}"
+    group: "{{ lighthouse_group }}"
+    mode: "0644"
+  when: lighthouse_mode == "validator"
+  notify:
+    - lighthouse - restart validator
+
+- name: Lighthouse - ensure beacon service is started (if in beacon mode)
+  ansible.builtin.systemd:
+    name: "{{ lighthouse_beacon_service_name }}"
+    state: started
+    daemon_reload: true
+    enabled: true
+  when: lighthouse_mode == "beacon"
+  notify:
+    - lighthouse - restart beacon
+
+- name: Lighthouse - ensure validator service is started (if in validator mode)
+  ansible.builtin.systemd:
+    name: "{{ lighthouse_validator_service_name }}"
+    state: started
+    daemon_reload: true
+    enabled: true
+  when: lighthouse_mode == "validator"
+  notify:
+    - lighthouse - restart validator
