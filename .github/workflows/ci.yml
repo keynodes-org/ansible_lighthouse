@@ -1,6 +1,10 @@
 name: lighthouse molecule test
 
-on: [pull_request]
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   molecule-test:

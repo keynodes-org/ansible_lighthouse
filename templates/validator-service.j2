@@ -1,3 +1,5 @@
+# TODO: Add the ability to deploy the validator client
+
 [Unit]
 Description=Lighthouse Ethereum Validator Client
 After=network.target
@@ -30,36 +32,6 @@ RestartSec=5
 StartLimitInterval=0
 KillSignal=SIGINT
 TimeoutStopSec=300
-
-# Hardening measures
-ProtectSystem=full
-PrivateTmp=true
-PrivateDevices=true
-NoNewPrivileges=true
-MemoryDenyWriteExecute=true
-
-# Sandb
-{% endif %}
-  --debug-level {{ lighthouse_debug_level }}
-
-Restart=always
-RestartSec=5
-StartLimitInterval=0
-KillSignal=SIGINT
-TimeoutStopSec=300
-
-# Hardening measures
-ProtectSystem=full
-PrivateTmp=true
-PrivateDevices=true
-NoNewPrivileges=true
-MemoryDenyWriteExecute=true
-
-# Sandboxing
-ProtectHome=true
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=true
 
 [Install]
 WantedBy=multi-user.target
