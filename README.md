@@ -1,7 +1,9 @@
-lighthouse
+Lighthouse
 =========
 
-lighthouse execution layer
+Lighthouse is an Ethereum consensus and validator client.
+
+Currently, the role supports only consensus client deployment.
 
 **Tests:**
 * Ubuntu 22.04 (jammy)
