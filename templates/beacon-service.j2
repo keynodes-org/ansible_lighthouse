@@ -11,25 +11,19 @@ ExecStart={{ lighthouse_binary_path }} beacon_node \
 {% for config in lighthouse_beacon_node_config %}
 {% if config.value is sameas true %}
   --{{ config.name }} \
-{% elif config.value is sameas false %}
-  # --{{ config.name }} is disabled \
 {% elif config.value is string and config.value | length > 0 %}
   --{{ config.name }} {{ config.value }} \
 {% elif config.value is number %}
   --{{ config.name }} {{ config.value }} \
 {% endif %}
 {% endfor %}
-{% if lighthouse_beacon_node_custom_options | length > 0 %}
-{% for option in lighthouse_beacon_node_custom_options %}
-  {{ option }} {% if not loop.last %}\{% endif %}
-{% endfor %}
-{% endif %}
+
 
 Restart=always
 RestartSec=5
 StartLimitInterval=0
 KillSignal=SIGINT
-TimeoutStopSec=300
+TimeoutStopSec=30
 
 # Hardening measures
 ProtectSystem=full

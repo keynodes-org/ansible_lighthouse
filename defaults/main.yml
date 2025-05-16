@@ -39,7 +39,7 @@ lighthouse_dir_binary: "/usr/local/bin"
 lighthouse_binary_path: "{{ lighthouse_dir_binary }}/lighthouse"
 
 # @var lighthouse_download_url:description: URL to download the Lighthouse binary.
-lighthouse_binary_download_url: "https://github.com/sigp/lighthouse/releases/download/v6.0.1/lighthouse-v6.0.1-x86_64-unknown-linux-gnu.tar.gz"
+lighthouse_binary_download_url: "https://github.com/sigp/lighthouse/releases/download/v7.0.1/lighthouse-v7.0.1-x86_64-unknown-linux-gnu.tar.gz"
 
 # JWT settings
 # @var lighthouse_jwt_secret_path:description: Path to the JWT secret for authentication with execution client.
@@ -63,10 +63,7 @@ lighthouse_reinstall: false
 lighthouse_network: "mainnet"
 
 # @var lighthouse_beacon_datadir:description: Data directory for the beacon node.
-lighthouse_beacon_datadir: "{{ lighthouse_dir_data }}/.lighthouse"
-
-# @var lighthouse_validator_datadir:description: Data directory for the validator client.
-lighthouse_validator_datadir: "{{ lighthouse_dir_data }}/.lighthouse"
+lighthouse_dir_beacon: "{{ lighthouse_dir_data }}/beacon"
 
 # Beacon node configuration
 # @var lighthouse_beacon_node_config:description: List of configuration options for the Lighthouse beacon node.
@@ -76,7 +73,7 @@ lighthouse_beacon_node_config:
     value: "{{ lighthouse_network }}"
   - name: "datadir"
     description: "Data directory for the beacon node"
-    value: "{{ lighthouse_beacon_datadir }}"
+    value: "{{ lighthouse_dir_beacon }}"
   - name: "execution-endpoint"
     description: "Execution client endpoint"
     value: "http://localhost:8551"
@@ -123,7 +120,6 @@ lighthouse_beacon_node_config:
 # @var lighthouse_beacon_node_custom_config:description: Custom configuration options for the Lighthouse beacon node.
 lighthouse_beacon_node_custom_options: []
 # Example custom options:
-# - "--checkpoint-sync-url=https://sync-mainnet.beaconcha.in"
 # - "--execution-timeout-multiplier=2"
 # - "--prune-blobs"
 

@@ -26,6 +26,7 @@
     - "{{ lighthouse_dir_log }}"
     - "{{ lighthouse_dir_validators }}"
     - "{{ lighthouse_dir_secrets }}"
+    - "{{ lighthouse_dir_beacon }}"
 
 - name: Lighthouse - install required apt packages
   ansible.builtin.apt:
