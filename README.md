@@ -1,70 +1,4 @@
-Lighthouse
-=========
-
-Lighthouse is an Ethereum consensus and validator client.
-
-Currently, the role supports only consensus client deployment.
-
-**Tests:**
-* Ubuntu 22.04 (jammy)
-
-How to run molecule tests
-----------------------
-
-```shell
-python3 -m venv venv
-pip install -r requirements.txt
-source venv/bin/activate
-make init
-make test
-```
-
-Make
-----
-
-`make init` - Prepare environment
-`make test` - Run molecule tests (`molecule -v test`)
-`make docs` - Auto-generate `README` (`ansible-doctor`)
-
-Role install
---------------
-
-You can install role by using `ansible-galaxy`:
-
-```shell
-ansible-galaxy role install git+git@github.com:keynodes-org/ansible_lighthouse.git
-```
-
-For particular version of this role:
-```shell
-ansible-galaxy role install git+git@github.com:keynodes-org/ansible_lighthouse.git,main
-```
-
-Update to latest version:
-```shell
-ansible-galaxy role install git+git@github.com:keynodes-org/ansible_lighthouse.git --upgrade
-```
-
-Example of using in `requirements.yml`:
-```yaml
----
-roles:
-  - name: lighthouse
-    src: git+git@github.com:keynodes-org/ansible_lighthouse.git
-    version: main
-```
-
-How to use in playbook:
--------------------------
-
-```yaml
-- hosts: ansible_hostname
-  roles:
-    - role: ansible_lighthouse
-```
-
-Variables
-===============
+# ansible_lighthouse
 
 Ansible role for deploying Lighthouse consensus or validator client
 
@@ -79,6 +13,7 @@ Ansible role for deploying Lighthouse consensus or validator client
   - [lighthouse_binary_download_url](#lighthouse_binary_download_url)
   - [lighthouse_binary_path](#lighthouse_binary_path)
   - [lighthouse_dir_base](#lighthouse_dir_base)
+  - [lighthouse_dir_beacon](#lighthouse_dir_beacon)
   - [lighthouse_dir_binary](#lighthouse_dir_binary)
   - [lighthouse_dir_config](#lighthouse_dir_config)
   - [lighthouse_dir_data](#lighthouse_dir_data)
@@ -97,7 +32,6 @@ Ansible role for deploying Lighthouse consensus or validator client
   - [lighthouse_validator_client_config](#lighthouse_validator_client_config)
   - [lighthouse_validator_client_custom_config](#lighthouse_validator_client_custom_config)
   - [lighthouse_validator_custom_options](#lighthouse_validator_custom_options)
-  - [lighthouse_validator_datadir](#lighthouse_validator_datadir)
   - [lighthouse_validator_service_name](#lighthouse_validator_service_name)
 - [Tags](#tags)
 
@@ -110,12 +44,6 @@ Ansible role for deploying Lighthouse consensus or validator client
 ### lighthouse_beacon_datadir
 
 Data directory for the beacon node.
-
-#### Defaults
-
-```YAML
-lighthouse_beacon_datadir: '{{ lighthouse_dir_data }}/.lighthouse'
-```
 
 ### lighthouse_beacon_node_config
 
@@ -130,7 +58,7 @@ lighthouse_beacon_node_config:
     value: '{{ lighthouse_network }}'
   - name: datadir
     description: Data directory for the beacon node
-    value: '{{ lighthouse_beacon_datadir }}'
+    value: '{{ lighthouse_dir_beacon }}'
   - name: execution-endpoint
     description: Execution client endpoint
     value: http://localhost:8551
@@ -202,7 +130,8 @@ lighthouse_beacon_service_name: lighthouse-beacon
 #### Defaults
 
 ```YAML
-lighthouse_binary_download_url: https://github.com/sigp/lighthouse/releases/download/v6.0.1/lighthouse-v6.0.1-x86_64-unknown-linux-gnu.tar.gz
+lighthouse_binary_download_url:
+  https://github.com/sigp/lighthouse/releases/download/v7.0.1/lighthouse-v7.0.1-x86_64-unknown-linux-gnu.tar.gz
 ```
 
 ### lighthouse_binary_path
@@ -223,6 +152,14 @@ Base directory for Lighthouse installation.
 
 ```YAML
 lighthouse_dir_base: /opt/lighthouse
+```
+
+### lighthouse_dir_beacon
+
+#### Defaults
+
+```YAML
+lighthouse_dir_beacon: '{{ lighthouse_dir_data }}/beacon'
 ```
 
 ### lighthouse_dir_binary
@@ -416,16 +353,6 @@ Custom configuration options for the Lighthouse validator client.
 
 ```YAML
 lighthouse_validator_custom_options: []
-```
-
-### lighthouse_validator_datadir
-
-Data directory for the validator client.
-
-#### Defaults
-
-```YAML
-lighthouse_validator_datadir: '{{ lighthouse_dir_data }}/.lighthouse'
 ```
 
 ### lighthouse_validator_service_name
